@@ -3,18 +3,19 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import LoginButton from './loginButton';
 import LogoutButton from './logoutButton';
+import '../end.css';
 
 
-export function Header(){
+export function Header(props){
     return(
-      <Container fluid='true'>
-          <Navbar>
-            <Navbar.Brand>Daily Trivia Quiz</Navbar.Brand>
-            <Nav>
-                <LoginButton />
-                <LogoutButton />
-            </Nav>
-          </Navbar>
-      </Container>
+      <div>
+        <div id="menu" class="flex-center flex-column">
+            <h1>Menu</h1>
+            <a href="game.html" class="btn">Trivia</a>
+            <a href="stats.html" class="btn">Stats</a>
+            <LoginButton />
+            <LogoutButton />
+        </div>
+      </div>
     )
   }
