@@ -1,4 +1,5 @@
 const express = require('express')
+const auth0 = require('@auth0/auth0-react');
 
 const path = require('path');
 const fileURLToPath = require('url');
@@ -18,8 +19,8 @@ app.get(/^(?!\/api).+/,(req,res)=>{
     res.sendFile(path.join(__dirname,'../build/index.html'));
 })
 
-app.get('/',(req,res)=>{
-    res.json({msg: "hello world"});
+app.get('/', (req,res)=>{
+ 
 })
 app.listen(8000, ()=>{
     console.log('Server is listening on port 8000')
