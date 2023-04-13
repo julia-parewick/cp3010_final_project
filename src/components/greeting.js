@@ -14,7 +14,10 @@ export function Greeting() {
             return(
                 <>
                 <h2>Greetings, {user.given_name}.<br/>You have not played today!</h2>
-                <button >Begin</button>
+                <button onClick={()=>{
+                    document.getElementById("game").classList.toggle("hidden");
+                }}>
+                    Begin</button>
                 </>
             )
         }else{
