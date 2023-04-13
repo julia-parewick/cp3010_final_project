@@ -42,15 +42,9 @@ fetch("https://opentdb.com/api.php?amount=10&type=multiple")
     console.log(err);
 });
 
-startGame = () => {
-    questionCounter = 0;
-    score = 0;
-    availableQuestions = [...questions];
-    console.log(availableQuestions);
-    getNewQuestion();
-}
 
-getNewQuestion = () => {
+
+export function getNewQuestion() {
     if (availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS){
         return(window.location.assign('end.html'));
       }
@@ -93,7 +87,15 @@ choices.forEach(choice => {
     });
 });
 
-incrementScore = num => {
+export function incrementScore(num) {
     score += num;
     scoreText.innerText = score;
   };
+
+  export function startGame() {
+    questionCounter = 0;
+    score = 0;
+    availableQuestions = [...questions];
+    console.log(availableQuestions);
+    getNewQuestion();
+};
