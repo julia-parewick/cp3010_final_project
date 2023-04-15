@@ -7,15 +7,16 @@ export function Greeting() {
         return(<h1>Please Login!</h1>);
     }
     else{
-        console.log(isAuthenticated);
         localStorage.setItem("user_email", user.email);
-        localStorage.setItem("username", user.given_name);
+        localStorage.setItem("username", user.nickname);
         if(Date(localStorage.getItem("last_played"))<Date.now() || localStorage.getItem("last_played")==null){
             return(
                 <>
                 <h2>Greetings, {user.given_name}.<br/>You have not played today!</h2>
-                <button onClick={()=>{
-                    document.getElementById("game").classList.toggle("hidden");
+                <button id="displayGame" onClick={()=>{
+                    // document.getElementById("game").classList.remove("hidden");
+                    // document.getElementById("displayGame").classList.add("hidden");
+                    
                 }}>
                     Begin</button>
                 </>

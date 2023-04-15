@@ -4,7 +4,6 @@ import '../game.css';
 
 export function TriviaGame() {
     const { isAuthenticated } = useAuth0();
-    console.log(isAuthenticated);
     const currentTime = new Date().getTime();
     const date = new Date(currentTime);
 
