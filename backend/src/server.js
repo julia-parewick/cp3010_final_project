@@ -35,7 +35,7 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
 }));
 
 async function getQuestions(){
-    //triviaQuestions.deleteMany({});
+    triviaQuestions.deleteMany({});
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
     .then(res => {
         return res.json();
@@ -59,31 +59,14 @@ async function getQuestions(){
     })
 }
 
-
-        //console.log(response)
-        // for(let i = 0; i < loadedQuestions.results.length;i++){
-        //     // console.log(response[i]['type'])
-        //     const question = new Question({
-        //         category: response[i]['category'],
-        //         type: response[i]['type'],
-        //         difficulty: response[i]['difficulty'],
-        //         question: response[i]['question'],
-        //         correct_answer: response[i]['correct_answer'],
-        //         incorrect_answers: response[i]['incorrect_answers'],
-        //     });
-        //     question.save;
-        //}
-
-
-getQuestions();
-
+// Questions reset everynight at Midnight (00:00)
 function scheduleFunction() {
     const now = new Date();
     const targetTime = new Date(
         now.getFullYear(),
         now.getMonth(),
         now.getDate(),
-        12, // Hour(in 24-hour format)
+        0, // Hour(in 24-hour format)
         0, // Minute
         0, // Second
         0 // Millisecond
@@ -98,7 +81,6 @@ function scheduleFunction() {
         // setInterval(getQuestions(), 24 * 60 * 60 * 1000); // Schedule to repeat once a day
     }, timeUntilTarget);
 }
-  
 scheduleFunction();
 
 const app = express();
@@ -115,7 +97,8 @@ app.get(/^(?!\/api).+/,(req,res)=>{
 })
 
 app.get('/api/game', async (req,res)=>{
-    const client = new MongoClient('mongodb://localhost:27017');
+    //const client = new MongoClient('mongodb://localhost:27017');
+    const client = new MongoClient('mongodb://127.0.0.1:27017'); // << Hillarys
     await client.connect();
     console.log("Connected to DB...getting daily questions.")
     const db = client.db('triviaApp');
