@@ -40,13 +40,13 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
 //const Question = mongoose.model('Question', questionSchema)
 
 async function getQuestions(){
+    //triviaQuestions.deleteMany({});
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
     .then(res => {
         return res.json();
     })
     .then(loadedQuestions => {
         const response = loadedQuestions.results;
-
         triviaQuestions.insertMany(response)
             .then((docs) => {
                 console.log(`${docs.length} questions inserted`);
