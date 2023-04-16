@@ -29,9 +29,40 @@ function TriviaGame(props) {
     q.answers.push(q.correct_answer);
   }) 
 
-  // const handleAnswerClick = (selectedAnswer) => {
-  //   console.log(selectedAnswer)
-  // };
+  const handleAnswerClick = (questionObject, selectedAnswer) => {
+    if(props.questions.indexOf(questionObject)==0){
+      localStorage.setItem("score",0);
+      if(localStorage.getItem("streak")==null){
+        localStorage.setItem("streak",0);
+      }
+      if(questionObject.correct_answer == selectedAnswer){
+        localStorage.score++;
+        localStorage.streak++;
+      }else{
+        localStorage.setItem("streak",0);
+      }
+      setIndex(index+1);
+    }
+    else if(props.questions.indexOf(questionObject)==9){
+      if(questionObject.correct_answer == selectedAnswer){
+        localStorage.score++;
+        localStorage.streak++;
+      }else{
+        localStorage.setItem("streak",0);
+      }
+      document.getElementById("quiz").innerHTML=`<h1>THANK YOU FOR PLAYING<h1/>`
+    }
+    else{
+      if(questionObject.correct_answer == selectedAnswer){
+        localStorage.score++;
+        localStorage.streak++;
+      }else{
+        localStorage.setItem("streak",0);
+      }
+      setIndex(index+1);
+    }
+    console.log(selectedAnswer)
+  };
 
   return (
     isAuthenticated &&(<div>
@@ -40,13 +71,13 @@ function TriviaGame(props) {
             <Col>
               <h2>{props.questions[index].question}</h2>
               <Button style={{ width: "200px", height: "75px"}}
-              onClick={()=>{setIndex(index+1)}}>{props.questions[index].answers[0]}</Button>
+              onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[0])}}>{props.questions[index].answers[0]}</Button>
               <Button style={{ width: "200px", height: "75px",}}
-              onClick={()=>{setIndex(index+1)}}>{props.questions[index].answers[1]}</Button>
+              onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[1])}}>{props.questions[index].answers[1]}</Button>
               <Button style={{ width: "200px", height: "75px",}}
-              onClick={()=>{setIndex(index+1)}}>{props.questions[index].answers[2]}</Button>
+              onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[2])}}>{props.questions[index].answers[2]}</Button>
               <Button style={{ width: "200px", height: "75px",}}
-              onClick={()=>{setIndex(index+1)}}>{props.questions[index].answers[3]}</Button><br></br>
+              onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[3])}}>{props.questions[index].answers[3]}</Button><br></br>
             </Col>
           </Row>
 
@@ -73,7 +104,9 @@ function Index(){
     <>
       <Header/>
       <Greeting />
-      <TriviaGame questions={questions} setQuestions={setQuestions}/>
+      <div id="quiz">
+        <TriviaGame questions={questions} setQuestions={setQuestions}/>
+      </div>
       {/* <Profile /> */}
     </>
   );
