@@ -11,6 +11,7 @@ export function Header(){
       <div>
         <div id="menu" class="flex-center flex-column">
             <h1>Menu</h1>
+            <a href='/' class="btn">Home</a>
             <a href="/stats" class="btn">Stats</a>
             <LoginButton />
             <LogoutButton />
