@@ -58,6 +58,7 @@ async function getQuestions(){
         
     })
 }
+getQuestions();
 
 // Questions reset everynight at Midnight (00:00)
 function scheduleFunction() {
@@ -96,7 +97,7 @@ app.get(/^(?!\/api).+/,(req,res)=>{
     res.sendFile(path.join(__dirname,'../build/index.html'));
 })
 
-// TODO: issue is here
+
 app.get('/api/game', async (req,res)=>{
     //const client = new MongoClient('mongodb://localhost:27017');
     const client = new MongoClient('mongodb://127.0.0.1:27017');
