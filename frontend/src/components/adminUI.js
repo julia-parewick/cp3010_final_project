@@ -1,5 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import '../utilities/end.css';
 
 export function AdminView(){
 
@@ -33,10 +35,14 @@ export function AdminView(){
 
     return(
         <>
-        <Button onClick={()=>{
+        <Row className = 'styleRow'>
+            <div>
+            <button class = "btnMenu" onClick={()=>{
             resetQuestions()
-        }}>Reset Questions</Button>
-        <div id="message"></div>
+            }}>Reset Questions</button>
+            <div id="message"></div>
+            </div>
+        </Row>
         </>
     )
 }

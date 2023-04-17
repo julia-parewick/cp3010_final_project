@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import mongoose from 'mongoose';
 
-// mongoose.connect("mongodb://127.0.0.1:27017/triviaApp");
 mongoose.connect(process.env.MONGO_CONNECT);
 
 const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
@@ -36,6 +35,7 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
         default: []
     }
 }));
+
 async function getQuestions(){
     triviaQuestions.deleteMany({});
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
@@ -59,6 +59,7 @@ async function getQuestions(){
     })
 }
 getQuestions();
+
 // Questions reset everynight at Midnight (00:00)
 function scheduleFunction() {
     const now = new Date();
@@ -81,6 +82,7 @@ function scheduleFunction() {
     }, timeUntilTarget);
 }
 scheduleFunction();
+
 const app = express();
 app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
@@ -90,6 +92,7 @@ app.use(express.static(path.join(__dirname,'../build')));
 app.get(/^(?!\/api).+/,(req,res)=>{
     res.sendFile(path.join(__dirname,'../build/index.html'));
 })
+
 app.post('/api/adminreset', async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
@@ -113,6 +116,7 @@ app.post('/api/adminreset', async(req,res)=>{
 
     res.sendStatus(200);
 })
+
 app.get('/api/game', async (req,res)=>{
     //const client = new MongoClient('mongodb://localhost:27017');
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
@@ -155,6 +159,7 @@ app.get('/api/getuser', async(req,res)=>{
     await client.close()
     res.json(questions);
 })
+
 app.post('/api/adduser',async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
@@ -165,6 +170,7 @@ app.post('/api/adduser',async(req,res)=>{
     await client.close()
     res.redirect("/");
 })
+
 app.post('/api/user', async(req,res)=>{
     console.log(req.body.email);
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
@@ -185,6 +191,7 @@ app.post('/api/user', async(req,res)=>{
     await client.close()
     res.sendStatus(200);
 })
+
 app.listen(8000, ()=>{
     console.log('Server is listening on port 8000')
 });
