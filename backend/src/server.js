@@ -10,30 +10,6 @@ import mongoose from 'mongoose';
 // mongoose.connect("mongodb://127.0.0.1:27017/triviaApp");
 mongoose.connect(process.env.MONGO_CONNECT);
 
-
-// const userData = mongoose.model('userData', new mongoose.Schema({
-//     email:{
-//         type:String,
-//         required:true
-//     },
-//     lastPlayed:{
-//         type:String,
-//         required:true
-//     },
-//     currentStreak:{
-//         type:Number,
-//         required:true
-//     },
-//     recordStreak:{
-//         type:Number,
-//         required:true
-//     },
-//     perfectScores:{
-//         type:Number,
-//         required:true
-//     }
-// }));
-
 const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     category:{
         type:String,
@@ -60,23 +36,6 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
         default: []
     }
 }));
-
-async function checkDBifEmpty(){
-    const client = new MongoClient(process.env.MONGO_CONNECT2);
-    await client.connect();
-    const db = client.db('triviaApp');
-    var collectionCount = await db.collection('triviaquestions').countDocuments()
-    console.log("Collection Count: " + collectionCount)
-    
-        if( collectionCount == 0) {
-            getQuestions()
-        }
-        else {
-            console.log("Found Records : " + collectionCount);
-        }
-}
-checkDBifEmpty();
-
 async function getQuestions(){
     triviaQuestions.deleteMany({});
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
@@ -85,9 +44,7 @@ async function getQuestions(){
     })
     .then(loadedQuestions => {
         const response = loadedQuestions.results;
-
         triviaQuestions.collection.deleteMany({});
-
         triviaQuestions.insertMany(response)
             .then((docs) => {
                 console.log(`${docs.length} questions inserted`);
@@ -101,7 +58,7 @@ async function getQuestions(){
         
     })
 }
-
+getQuestions();
 // Questions reset everynight at Midnight (00:00)
 function scheduleFunction() {
     const now = new Date();
@@ -125,49 +82,42 @@ function scheduleFunction() {
     }, timeUntilTarget);
 }
 scheduleFunction();
-
 const app = express();
 app.use(express.json());
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 app.use(express.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,'../build')));
-
 app.get(/^(?!\/api).+/,(req,res)=>{
     res.sendFile(path.join(__dirname,'../build/index.html'));
 })
-
 app.post('/api/adminreset', async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
-
     await client.connect();
     const db = client.db('test');
     const deleteAll = await db.collection('triviaquestions').deleteMany();
     console.log("triviaQuestions Db Cleared!");
+    await client.close()
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
     .then(res => {
         return res.json();
     })
     .then(async loadedQuestions => {
+        await client.connect();
         console.log(loadedQuestions.results);
         const reloadQuestions = await db.collection('triviaquestions').insertMany(loadedQuestions.results); 
         console.log("triviaQuestions DB reloaded!")
+
     })
     await client.close()
-    
+
     res.sendStatus(200);
-
-
 })
-
 app.get('/api/game', async (req,res)=>{
     //const client = new MongoClient('mongodb://localhost:27017');
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
-
     await client.connect();
     console.log("Connected to DB...getting daily questions.")
     const db = client.db('test');
@@ -176,11 +126,9 @@ app.get('/api/game', async (req,res)=>{
     await client.close()
     res.json(questions);
 })
-
 app.get('/api/getuser', async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
-
     await client.connect();
     console.log("Connected to DB...getting users.")
     const db = client.db('test');
@@ -189,11 +137,9 @@ app.get('/api/getuser', async(req,res)=>{
     await client.close()
     res.json(questions);
 })
-
 app.post('/api/adduser',async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
-
     await client.connect();
     const db = client.db('test');
     console.log("Adding...");
@@ -201,12 +147,10 @@ app.post('/api/adduser',async(req,res)=>{
     await client.close()
     res.redirect("/");
 })
-
 app.post('/api/user', async(req,res)=>{
     console.log(req.body.email);
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
-
     await client.connect();
     console.log("Updating user stats...");
     const db = client.db('test');
@@ -222,9 +166,7 @@ app.post('/api/user', async(req,res)=>{
     console.log("User Updated!");
     await client.close()
     res.sendStatus(200);
-
 })
-
 app.listen(8000, ()=>{
     console.log('Server is listening on port 8000')
 });
