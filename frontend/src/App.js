@@ -23,8 +23,9 @@ function Stats() {
     <p>User: {localStorage.username}</p>
     <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p>
     <p>Last played: {localStorage.last_played} </p>
-    <p>Today's score: {localStorage.score}</p>
-    <p>Record Streak: {localStorage.record}</p>
+    <p>Today's score: {localStorage.score}/10</p>
+    <p>Record Streak: {localStorage.record} correct answers in a row</p>
+    <p>Perfect Scores: {localStorage.perfect}</p>
     </>
   )
 }
@@ -42,6 +43,34 @@ function TriviaGame(props) {
     q.answers.push(q.correct_answer);
   }) 
 
+  const updateUser = async (email,lastPlayed,streak,record,perfect) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("email", email);
+    urlencoded.append("lastPlayed",lastPlayed);
+    urlencoded.append("currentStreak",streak);
+    urlencoded.append("recordStreak",record);
+    urlencoded.append("perfectScores",perfect);
+  
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow'
+    };
+    try{
+      let response = await fetch("/api/user",requestOptions);
+      if(response.status==200){
+        console.log("Updated!")
+      }
+    }
+    catch (e) {
+      console.log('error', e)
+    }
+  }
+
   const handleAnswerClick = (questionObject, selectedAnswer, btnID) => {
     if(props.questions.indexOf(questionObject)==0){
       localStorage.setItem("score",0);
@@ -50,6 +79,9 @@ function TriviaGame(props) {
       }
       if(localStorage.getItem("record")==null){
         localStorage.setItem("record",0);
+      }
+      if(localStorage.getItem("perfect")==null){
+        localStorage.setItem("perfect",0);
       }
       if(questionObject.correct_answer == selectedAnswer){
         btnColorCorrect(btnID)
@@ -75,6 +107,9 @@ function TriviaGame(props) {
         if(localStorage.streak>localStorage.record){
           localStorage.record=localStorage.streak;
         }
+        if(localStorage.score==10){
+          localStorage.perfect++;
+        }
         localStorage.setItem("last_played", date.getMonth()+"/"+date.getDate()+"/"+date.getFullYear());
       }else{
         btnColorIncorrect(btnID)
@@ -85,6 +120,10 @@ function TriviaGame(props) {
         setButtonVariants(['info','info','info','info']);
         document.getElementById("quiz").innerHTML=`<h1>THANK YOU FOR PLAYING<h1/>`;
       }, 1000)
+
+      //update user in db
+      updateUser(localStorage.email,localStorage.last_played,localStorage.streak,localStorage.record,localStorage.perfect)
+
     }
     else{
       if(questionObject.correct_answer == selectedAnswer){
@@ -125,6 +164,8 @@ function TriviaGame(props) {
                 <Col>
                   <div>
                   <br /><h2>Score: {localStorage.score}</h2><br />
+                  <br /><h2>Streak: {localStorage.streak}</h2><br />
+                  <br /><h2>Current Record Streak: {localStorage.record}</h2><br />
                   <h2>{props.questions[index].question}</h2>
                   <Button variant={buttonVariants[0]} style={{ width: "200px", height: "75px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[0], 0)}}>{props.questions[index].answers[0]}</Button>
@@ -161,7 +202,6 @@ function Index(){
       <div id="quiz">
         <TriviaGame questions={questions} setQuestions={setQuestions}/>
       </div>
-      {/* <Profile /> */}
     </>
   );
 }
