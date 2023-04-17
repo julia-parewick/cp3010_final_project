@@ -6,18 +6,6 @@ import { AdminView } from './adminUI';
 
 export function Greeting(props) {
     const { user, isAuthenticated } = useAuth0();
-
-    // const [ userData, setUser ] = useState([]);
-
-    // useEffect(() => {
-    //     fetch('/api/getuser')
-    //     .then(res => res.json())
-    //     .then(setUser)
-    //     .catch(e=>console.log(e.message));
-    // }, []);
-
-
-
     const addNewUser = async (email) =>{
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");

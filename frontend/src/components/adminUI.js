@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 
 export function AdminView(){
 
-    const resetQuestions = async () => {
+    const resetQuestions = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
         var urlencoded = new URLSearchParams();
@@ -14,7 +14,7 @@ export function AdminView(){
             redirect: 'follow'
         };
         try{
-            let response = await fetch("/api/adminreset",requestOptions);
+            let response = fetch("/api/adminreset",requestOptions);
             if(response.status==200){
                 console.log("Reset!")
             }
