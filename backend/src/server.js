@@ -130,8 +130,6 @@ app.get('/api/game', async (req,res)=>{
         }
         return array;
       }
-      
-    //   let questions = [];
     
     questions.map((q,i)=>{
         q.answers = q.incorrect_answers;
@@ -144,7 +142,8 @@ app.get('/api/game', async (req,res)=>{
     console.log(questions);
     await client.close()
     res.json(questions);
-})
+}) 
+
 app.get('/api/getuser', async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
