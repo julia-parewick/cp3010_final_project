@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { AdminView } from './components/adminUI';
 // import './game.css';
 
 
@@ -156,6 +157,7 @@ function TriviaGame(props) {
     newButtonVariants[index] = 'danger';
     setButtonVariants(newButtonVariants);
   }
+
   if(localStorage.getItem("last_played")!=date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear() || localStorage.getItem("last_played")==null){
     return (
       isAuthenticated &&(<div>
@@ -182,10 +184,12 @@ function TriviaGame(props) {
       </div>)
     );
   }
+  
+
 }
 
 function Index(){
-
+  const { user, isAuthenticated } = useAuth0();
   let [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -194,16 +198,15 @@ function Index(){
       .then(setQuestions)
       .catch(e=>console.log(e.message));
   }, []);
-
-  return(
-    <>
-      <Header/>
-      <Greeting />
-      <div id="quiz">
-        <TriviaGame questions={questions} setQuestions={setQuestions}/>
-      </div>
-    </>
-  );
+    return(
+      <>
+        <Header/>
+        <Greeting />
+        <div id="quiz">
+          <TriviaGame questions={questions} setQuestions={setQuestions}/>
+        </div>
+      </>
+    );
 }
 
 function App() {
