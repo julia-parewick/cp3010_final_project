@@ -3,6 +3,10 @@
   background-color: #7e7ac2;
 }
 
+.body {
+  background-color: #7e7ac2;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -38,7 +42,7 @@
   }
 }
 
-.quizRow {
+.styleRow {
   display: flex;
   width: 100%;
   max-width: 100%;
@@ -46,4 +50,15 @@
   justify-content: center;
   text-align: center;
   background-color: #7e7ac2;
+}
+
+.divStats{
+  display: flex;
+  width: 75%;
+  max-width: 75%;
+  margin: 0 auto;
+  justify-content: center;
+  text-align: center;
+  background-color: #b8eaff;
+  border: #61dafb;
 }

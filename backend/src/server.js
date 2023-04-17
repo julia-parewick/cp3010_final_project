@@ -62,7 +62,7 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
 }));
 
 async function checkDBifEmpty(){
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    const client = new MongoClient(process.env.MONGO_CONNECT2);
     await client.connect();
     const db = client.db('triviaApp');
     var collectionCount = await db.collection('triviaquestions').countDocuments()

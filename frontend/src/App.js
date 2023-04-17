@@ -10,24 +10,30 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AdminView } from './components/adminUI';
-// import './game.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function Stats() {
+  document.body.style = 'background: #7e7ac2;';
   const currentTime = new Date().getTime();
   const date = new Date(currentTime);
 
   return(
     <>
     <Header/>
-    <h1>Stats</h1>
-    <p>User: {localStorage.username}</p>
-    <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p>
-    <p>Last played: {localStorage.last_played} </p>
-    <p>Today's score: {localStorage.score}/10</p>
-    <p>Record Streak: {localStorage.record} correct answers in a row</p>
-    <p>Perfect Scores: {localStorage.perfect}</p>
+    <Row className = "styleRow">
+      <Col>
+        <div class = "divStats">
+          <h1>Stats</h1>
+          <p>User: {localStorage.username}</p>
+          <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p>
+          <p>Last played: {localStorage.last_played} </p>
+          <p>Today's score: {localStorage.score}/10</p>
+          <p>Record Streak: {localStorage.record} correct answers in a row</p>
+          <p>Perfect Scores: {localStorage.perfect}</p>
+        </div>
+      </Col>
+    </Row>
     </>
   )
 }
@@ -183,7 +189,7 @@ function TriviaGame(props) {
     return (
       isAuthenticated &&(<div>
           <div class="hidden" key={index}>
-              <Row className = "quizRow">
+              <Row className = "styleRow">
                 <Col>
                   <div>
                   <br /><h2>Score: {localStorage.score}</h2><br />
@@ -210,6 +216,7 @@ function TriviaGame(props) {
 }
 
 function Index(props){  
+  document.body.style = 'background: #7e7ac2;';
   let [ userData, setUser ] = useState([]);
 
   useEffect(() => {
@@ -220,7 +227,7 @@ function Index(props){
   }, []);
   if(userData.length==0){
     return(
-      <h3>Loading...</h3>
+      <Row className = "styleRow"><br /><h3>Loading...</h3><br /></Row>
     )
   }else{
     return(
@@ -236,6 +243,7 @@ function Index(props){
 }
 
 function App() {
+  document.body.style = 'background: #7e7ac2;';
   let [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -246,7 +254,7 @@ function App() {
   }, []);
   console.log(questions);
   if (questions.length==0){
-    return <h3>Loading...</h3>
+    return <Row className = "styleRow"><br /><h3>Loading...</h3><br /></Row>
   }else{
     return (
       <Routes>

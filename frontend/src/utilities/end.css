@@ -1,5 +1,5 @@
 body {
-    background-color: #eee6ff;
+    background-color: #7e7ac2;
 }
 
 .btn {
@@ -47,10 +47,12 @@ body {
     display: flex;
     width: 100%;
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0;
     justify-content: center;
     text-align: center;
     background-color: #b8eaff;
+    top: 0;
+    left: 0;
 }
 
 .greetingsRow{
@@ -61,4 +63,8 @@ body {
     justify-content: center;
     text-align: center;
     background-color: #7e7ac2;
+}
+
+#menu {
+    background-color: #b8eaff;
 }
