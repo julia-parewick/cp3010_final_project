@@ -7,6 +7,29 @@ import mongoose from 'mongoose';
 
 mongoose.connect("mongodb://127.0.0.1:27017/triviaApp");
 
+const userData = mongoose.model('userData', new mongoose.Schema({
+    email:{
+        type:String,
+        required:true
+    },
+    lastPlayed:{
+        type:String,
+        required:true
+    },
+    currentStreak:{
+        type:Number,
+        required:true
+    },
+    recordStreak:{
+        type:Number,
+        required:true
+    },
+    perfectScores:{
+        type:Number,
+        required:true
+    }
+}));
+
 const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     category:{
         type:String,
@@ -107,6 +130,45 @@ app.get('/api/game', async (req,res)=>{
     const questions = await db.collection('triviaquestions').find({}).toArray();
     console.log(questions);
     res.json(questions);
+})
+
+app.get('/api/getuser', async(req,res)=>{
+    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    await client.connect();
+    console.log("Connected to DB...getting users.")
+    const db = client.db('triviaApp');
+    const questions = await db.collection('users').find({}).toArray();
+    console.log(questions);
+    res.json(questions);
+})
+
+app.post('/api/adduser',async(req,res)=>{
+    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    await client.connect();
+    const db = client.db('triviaApp');
+    console.log("Adding...");
+    const adduser = await db.collection('users').insertOne({"email":req.body.email,"lastPlayed":"","currentStreak":0,"recordStreak":0,"perfectScores":0});
+    res.redirect("/");
+})
+
+app.post('/api/user', async(req,res)=>{
+    console.log(req.body.email);
+    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    await client.connect();
+    console.log("Updating user stats...");
+    const db = client.db('triviaApp');
+    const user = await db.collection('users').findOneAndReplace({email:req.body.email},
+        {
+            email:req.body.email,
+            lastPlayed:req.body.lastPlayed,
+            currentStreak:req.body.currentStreak,
+            recordStreak:req.body.recordStreak,
+            perfectScores:req.body.perfectScores
+        }
+    );
+    console.log("User Updated!");
+    res.sendStatus(200);
+
 })
 
 app.listen(8000, ()=>{
