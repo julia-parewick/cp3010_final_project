@@ -1,4 +1,4 @@
-//import './App.css';
+import './utilities/App.css';
 import { Header } from './components/header';
 import { Greeting } from './components/greeting';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AdminView } from './components/adminUI';
 // import './game.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function Stats() {
@@ -31,8 +32,27 @@ function Stats() {
   )
 }
 
+function shuffleArray(array){
+  array.splice(4, 1)
+  let num = array.length,
+  randomIndex;
+
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < array[i].length; j++) {
+      console.log("inner loop")
+      while(num != 0){
+        randomIndex = Math.floor(Math.random()* num);
+        num--;
+        [array[num], array[randomIndex]] = [array[randomIndex], array[num]];
+      }
+    }
+    return array;
+  }
+  
+};
 
 function TriviaGame(props) {
+  document.body.style = 'background: #7e7ac2;';
   const { isAuthenticated } = useAuth0();
   const [buttonVariants, setButtonVariants] = useState(['info','info','info','info']);
   let [index,setIndex] = useState(0);
@@ -42,6 +62,7 @@ function TriviaGame(props) {
   props.questions.map((q,i)=>{
     q.answers = q.incorrect_answers;
     q.answers.push(q.correct_answer);
+    console.log(q.answers)
   }) 
 
   const updateUser = async (email,lastPlayed,streak,record,perfect) => {
@@ -162,20 +183,20 @@ function TriviaGame(props) {
     return (
       isAuthenticated &&(<div>
           <div class="hidden" key={index}>
-              <Row>
+              <Row className = "quizRow">
                 <Col>
                   <div>
                   <br /><h2>Score: {localStorage.score}</h2><br />
                   <br /><h2>Streak: {localStorage.streak}</h2><br />
                   <br /><h2>Current Record Streak: {localStorage.record}</h2><br />
                   <h2>{props.questions[index].question}</h2>
-                  <Button variant={buttonVariants[0]} style={{ width: "200px", height: "75px",}}
+                  <Button variant={buttonVariants[0]} style={{ width: "200px", height: "75px", margin: "5px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[0], 0)}}>{props.questions[index].answers[0]}</Button>
-                  <Button variant={buttonVariants[1]} style={{ width: "200px", height: "75px",}}
-                  onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[1], 1)}}>{props.questions[index].answers[1]}</Button>
-                  <Button variant={buttonVariants[2]} style={{ width: "200px", height: "75px",}}
+                  <Button variant={buttonVariants[1]} style={{ width: "200px", height: "75px", margin: "5px",}}
+                  onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[1], 1)}}>{props.questions[index].answers[1]}</Button><br />
+                  <Button variant={buttonVariants[2]} style={{ width: "200px", height: "75px", margin: "5px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[2], 2)}}>{props.questions[index].answers[2]}</Button>
-                  <Button variant={buttonVariants[3]} style={{ width: "200px", height: "75px",}}
+                  <Button variant={buttonVariants[3]} style={{ width: "200px", height: "75px", margin: "5px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[3], 3)}}>{props.questions[index].answers[3]}</Button><br /><br />
                   </div>
                 </Col>

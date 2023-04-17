@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #7e7ac2;
 }
 
 .App-logo {
@@ -21,7 +22,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #7e7ac2;
 }
 
 .App-link {
@@ -35,4 +36,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.quizRow {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  justify-content: center;
+  text-align: center;
+  background-color: #7e7ac2;
 }

@@ -1,1 +1,0 @@
-// display score and buttons

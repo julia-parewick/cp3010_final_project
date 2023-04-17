@@ -3,6 +3,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from 'react';
 import { AdminView } from './adminUI';
+import '../utilities/end.css';
+import Row from 'react-bootstrap/Row';
 
 export function Greeting(props) {
     const { user, isAuthenticated } = useAuth0();
@@ -57,7 +59,9 @@ export function Greeting(props) {
     const currentTime = new Date().getTime();
     const date = new Date(currentTime);
     if(!isAuthenticated){
+        <Row className='greetingsRow'>
         return(<h1>Please Login!</h1>);
+        </Row>
     }
     else{
         localStorage.clear();
@@ -80,26 +84,21 @@ export function Greeting(props) {
         else if(localStorage.email=="admin@cp3010.com"){
             return(
                 <>
-                <h1>Greetings, Admin.</h1>
-                <p>Admin Tools:</p>
-                <AdminView/>
+                <h2>Greetings, {user.nickname}.<br/>You have not played today!</h2>
+                {/* <Button id="displayGame" onClick={()=>{
+                    document.getElementById("game").classList.remove("hidden");
+                    document.getElementById("displayGame").classList.add("hidden");
+                    
+                }}>
+                    Begin</Button> */}
                 </>
             )
-        }
-        else{
-            if(localStorage.getItem("last_played")!=date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear() || localStorage.getItem("last_played")==null){
-                return(
-                    <>
-                    <h2>Greetings, {user.nickname}.<br/>You have not played today!</h2>
-                    </>
-                )
-            }else{
-                return(
-                    <>
-                    <h2>Greetings, {user.nickname}.<br/>You have already played today. Wait until tomorrow.</h2>
-                    </>
-                )
-            }
+        }else{
+            return(
+                <>
+                <h2>Greetings, {user.given_name}.<br/>You have already played today. Wait until tomorrow.</h2>
+                </>
+            )
         }
     }
 }

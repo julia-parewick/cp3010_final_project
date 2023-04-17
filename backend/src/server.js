@@ -61,6 +61,22 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     }
 }));
 
+async function checkDBifEmpty(){
+    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    await client.connect();
+    const db = client.db('triviaApp');
+    var collectionCount = await db.collection('triviaquestions').countDocuments()
+    console.log("Collection Count: " + collectionCount)
+    
+        if( collectionCount == 0) {
+            getQuestions()
+        }
+        else {
+            console.log("Found Records : " + collectionCount);
+        }
+}
+checkDBifEmpty();
+
 async function getQuestions(){
     triviaQuestions.deleteMany({});
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
@@ -85,7 +101,6 @@ async function getQuestions(){
         
     })
 }
-getQuestions();
 
 // Questions reset everynight at Midnight (00:00)
 function scheduleFunction() {
