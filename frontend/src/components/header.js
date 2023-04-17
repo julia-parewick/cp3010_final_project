@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 
 
 export function Header(){
+  document.body.style = 'background: #9e9e9e;';
     return(
       <div>
         <Row className = "menuRow">

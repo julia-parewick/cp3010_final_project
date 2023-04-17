@@ -1,10 +1,10 @@
 .App {
   text-align: center;
-  background-color: #7e7ac2;
+  background-color: #e3e3e3;
 }
 
 .body {
-  background-color: #7e7ac2;
+  background-color: #e3e3e3;
 }
 
 .App-logo {
@@ -26,7 +26,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #7e7ac2;
+  color: #e3e3e3;
 }
 
 .App-link {
@@ -49,7 +49,7 @@
   margin: 0 auto;
   justify-content: center;
   text-align: center;
-  background-color: #7e7ac2;
+  background-color: #9e9e9e;
 }
 
 .divStats{
@@ -59,6 +59,7 @@
   margin: 0 auto;
   justify-content: center;
   text-align: center;
-  background-color: #b8eaff;
-  border: #61dafb;
+  background-color: #9e9e9e;
+  border: #7d7d7d;
+  margin-top: 5px;
 }

@@ -12,7 +12,7 @@ import { AdminView } from './components/adminUI';
 
 
 function Stats() {
-  document.body.style = 'background: #7e7ac2;';
+  document.body.style = 'background: #9e9e9e;';
   const currentTime = new Date().getTime();
   const date = new Date(currentTime);
 
@@ -22,13 +22,15 @@ function Stats() {
     <Row className = "styleRow">
       <Col>
         <div class = "divStats">
-          <h1>Stats</h1>
-          <p>User: {localStorage.username}</p>
-          <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p>
-          <p>Last played: {localStorage.last_played} </p>
-          <p>Today's score: {localStorage.score}/10</p>
-          <p>Record Streak: {localStorage.record} correct answers in a row</p>
-          <p>Perfect Scores: {localStorage.perfect}</p>
+          <>
+          <h1>Stats</h1><br /><br />
+          <p>User: {localStorage.username}</p><br />
+          <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p><br />
+          <p>Last played: {localStorage.last_played} </p><br />
+          <p>Today's score: {localStorage.score}/10</p><br />
+          <p>Record Streak: {localStorage.record} correct answers in a row</p><br />
+          <p>Perfect Scores: {localStorage.perfect}</p><br />
+          </>
         </div>
       </Col>
     </Row>
@@ -38,6 +40,7 @@ function Stats() {
 
 
 function TriviaGame(props) {
+  document.body.style = 'background: #e3e3e3;';
   const { isAuthenticated } = useAuth0();
   const [buttonVariants, setButtonVariants] = useState(['info','info','info','info']);
   let [index,setIndex] = useState(0);
@@ -189,8 +192,8 @@ function TriviaGame(props) {
               <Row className = "styleRow">
                 <Col>
                   <div>
-                  <br /><h2>Score: {localStorage.score}</h2><br />
-                  <br /><h2>Streak: {localStorage.streak}</h2><br />
+                  <br /><h2>Score: {localStorage.score}</h2>
+                  <br /><h2>Streak: {localStorage.streak}</h2>
                   <br /><h2>Current Record Streak: {localStorage.record}</h2><br />
                   <h2>{props.questions[index].question}</h2>
                   <Button variant={buttonVariants[0]} style={{ width: "200px", height: "75px",}}
@@ -201,6 +204,7 @@ function TriviaGame(props) {
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[2], 2)}}>{props.questions[index].answers[2]}</Button>
                   <Button variant={buttonVariants[3]} style={{ width: "200px", height: "75px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[3], 3)}}>{props.questions[index].answers[3]}</Button><br /><br />
+                  <br />
                   </div>
                 </Col>
               </Row>
@@ -213,7 +217,7 @@ function TriviaGame(props) {
 }
 
 function Index(props){  
-  document.body.style = 'background: #7e7ac2;';
+  document.body.style = 'background: #e3e3e3;';
   let [ userData, setUser ] = useState([]);
 
   useEffect(() => {
@@ -240,7 +244,7 @@ function Index(props){
 }
 
 function App() {
-  document.body.style = 'background: #7e7ac2;';
+  document.body.style = 'background: #e3e3e3;';
   let [questions, setQuestions] = useState([]);
 
   useEffect(() => {
