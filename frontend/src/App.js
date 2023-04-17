@@ -9,57 +9,64 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AdminView } from './components/adminUI';
-// import './game.css';
-
+import './utilities/App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+document.body.style.background = '#e3e3e3;';
 
 function Stats() {
+  document.body.style = 'background: #e3e3e3;';
   const currentTime = new Date().getTime();
   const date = new Date(currentTime);
 
   return(
     <>
     <Header/>
-    <h1>Stats</h1>
-    <p>User: {localStorage.username}</p>
-    <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p>
-    <p>Last played: {localStorage.last_played} </p>
-    <p>Today's score: {localStorage.score}/10</p>
-    <p>Record Streak: {localStorage.record} correct answers in a row</p>
-    <p>Perfect Scores: {localStorage.perfect}</p>
+    <Row className = 'styleRow'>
+      <Col>
+          <h1>Stats</h1><br />
+          <p>User: {localStorage.username}</p>
+          <p>Today's Date: {date.getMonth()}/{date.getDate()}/{date.getFullYear()}</p>
+          <p>Last played: {localStorage.last_played} </p>
+          <p>Today's score: {localStorage.score}/10</p>
+          <p>Record Streak: {localStorage.record} correct answers in a row</p>
+          <p>Perfect Scores: {localStorage.perfect}</p>
+      </Col>
+    </Row>
     </>
   )
 }
 
 
 function TriviaGame(props) {
+  document.body.style = 'background: #e3e3e3;';
   const { isAuthenticated } = useAuth0();
   const [buttonVariants, setButtonVariants] = useState(['info','info','info','info']);
   let [index,setIndex] = useState(0);
   const currentTime = new Date().getTime();
   const date = new Date(currentTime);
 
-  function shuffle(array) {
-    let currentIndex = array.length,  randomIndex;
+  function shuffleArray(array){
+    array.splice(4, 1)
+    let num = array.length,
+    randomIndex;
   
-    // While there remain elements to shuffle.
-    while (currentIndex != 0) {
-  
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array[i].length; j++) {
+        while(num != 0){
+          randomIndex = Math.floor(Math.random()* num);
+          num--;
+          [array[num], array[randomIndex]] = [array[randomIndex], array[num]];
+        }
+      }
+      return array;
     }
-  
-    return array;
-  }
+    
+  };
 
   props.questions.map((q,i)=>{
     q.answers = q.incorrect_answers;
     q.answers.push(q.correct_answer);
-    q.answers = shuffle(q.answers);
+    q.answers = shuffleArray(q.answers);
   }) 
 
   const updateUser = async (email,lastPlayed,streak,record,perfect) => {
@@ -180,21 +187,22 @@ function TriviaGame(props) {
     return (
       isAuthenticated &&(<div>
           <div class="hidden" key={index}>
-              <Row>
+              <Row className = "styleRow">
                 <Col>
                   <div>
-                  <br /><h2>Score: {localStorage.score}</h2><br />
-                  <br /><h2>Streak: {localStorage.streak}</h2><br />
-                  <br /><h2>Current Record Streak: {localStorage.record}</h2><br />
+                  <br /><h3>Score: {localStorage.score}</h3>
+                  <h3>Streak: {localStorage.streak}</h3>
+                  <h3>Current Record Streak: {localStorage.record}</h3><br />
                   <h2>{props.questions[index].question}</h2>
-                  <Button variant={buttonVariants[0]} style={{ width: "200px", height: "75px",}}
+                  <Button variant={buttonVariants[0]} style={{ width: "200px", height: "75px", margin: "5px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[0], 0)}}>{props.questions[index].answers[0]}</Button>
-                  <Button variant={buttonVariants[1]} style={{ width: "200px", height: "75px",}}
-                  onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[1], 1)}}>{props.questions[index].answers[1]}</Button>
-                  <Button variant={buttonVariants[2]} style={{ width: "200px", height: "75px",}}
+                  <Button variant={buttonVariants[1]} style={{ width: "200px", height: "75px", margin: "5px",}}
+                  onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[1], 1)}}>{props.questions[index].answers[1]}</Button><br />
+                  <Button variant={buttonVariants[2]} style={{ width: "200px", height: "75px", margin: "5px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[2], 2)}}>{props.questions[index].answers[2]}</Button>
-                  <Button variant={buttonVariants[3]} style={{ width: "200px", height: "75px",}}
+                  <Button variant={buttonVariants[3]} style={{ width: "200px", height: "75px", margin: "5px",}}
                   onClick={()=>{handleAnswerClick(props.questions[index],props.questions[index].answers[3], 3)}}>{props.questions[index].answers[3]}</Button><br /><br />
+                  <br />
                   </div>
                 </Col>
               </Row>
@@ -207,6 +215,7 @@ function TriviaGame(props) {
 }
 
 function Index(props){  
+  document.body.style = 'background: #e3e3e3;';
   let [ userData, setUser ] = useState([]);
 
   useEffect(() => {
@@ -217,7 +226,7 @@ function Index(props){
   }, []);
   if(userData.length==0){
     return(
-      <h3>Loading...</h3>
+      <Row className = "styleRow"><br /><h3>Loading...</h3><br /></Row>
     )
   }else{
     return(
@@ -233,6 +242,7 @@ function Index(props){
 }
 
 function App() {
+  document.body.style = 'background: #e3e3e3;';
   let [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -243,7 +253,7 @@ function App() {
   }, []);
   console.log(questions);
   if (questions.length==0){
-    return <h3>Loading...</h3>
+    return <Row className = "styleRow"><br /><h3>Loading...</h3><br /></Row>
   }else{
     return (
       <Routes>

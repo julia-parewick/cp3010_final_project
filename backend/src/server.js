@@ -78,7 +78,6 @@ function scheduleFunction() {
     }
     setTimeout(() => {
         getQuestions();
-        // setInterval(getQuestions(), 24 * 60 * 60 * 1000); // Schedule to repeat once a day
     }, timeUntilTarget);
 }
 scheduleFunction();
