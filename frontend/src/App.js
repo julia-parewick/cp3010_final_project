@@ -45,30 +45,6 @@ function TriviaGame(props) {
   const currentTime = new Date().getTime();
   const date = new Date(currentTime);
 
-  function shuffleArray(array){
-    array.splice(4, 1)
-    let num = array.length,
-    randomIndex;
-  
-    for (let i = 0; i < array.length; i++) {
-      for (let j = 0; j < array[i].length; j++) {
-        while(num != 0){
-          randomIndex = Math.floor(Math.random()* num);
-          num--;
-          [array[num], array[randomIndex]] = [array[randomIndex], array[num]];
-        }
-      }
-      return array;
-    }
-    
-  };
-
-  props.questions.map((q,i)=>{
-    q.answers = q.incorrect_answers;
-    q.answers.push(q.correct_answer);
-    q.answers = shuffleArray(q.answers);
-  }) 
-
   const updateUser = async (email,lastPlayed,streak,record,perfect) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");

@@ -121,10 +121,29 @@ app.get('/api/game', async (req,res)=>{
     console.log("Connected to DB...getting daily questions.")
     const db = client.db('test');
     const questions = await db.collection('triviaquestions').find({}).toArray();
+    const shuffleArray = array => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+        return array;
+      }
+    
+    questions.map((q,i)=>{
+        q.answers = q.incorrect_answers;
+        q.answers.push(q.correct_answer);
+        console.log(q.answers);
+        q.answers = shuffleArray(q.answers)
+        
+        // console.log(q.answers);
+      }) 
     console.log(questions);
     await client.close()
     res.json(questions);
-})
+}) 
+
 app.get('/api/getuser', async(req,res)=>{
     // const client = new MongoClient('mongodb://127.0.0.1:27017');
     const client = new MongoClient(process.env.MONGO_CONNECT2);
