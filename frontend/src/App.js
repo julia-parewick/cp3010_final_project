@@ -188,8 +188,33 @@ function TriviaGame(props) {
 
 }
 
-function Index(){
-  const { user, isAuthenticated } = useAuth0();
+function Index(props){  
+  let [ userData, setUser ] = useState([]);
+
+  useEffect(() => {
+      fetch('/api/getuser')
+      .then(res => res.json())
+      .then(setUser)
+      .catch(e=>console.log(e.message));
+  }, []);
+  if(userData.length==0){
+    return(
+      <h3>Loading...</h3>
+    )
+  }else{
+    return(
+      <>
+        <Header/>
+        <Greeting users={userData}/>
+        <div id="quiz">
+          <TriviaGame questions={props.questions}/>
+        </div>
+      </>
+    )
+  }
+}
+
+function App() {
   let [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -198,25 +223,16 @@ function Index(){
       .then(setQuestions)
       .catch(e=>console.log(e.message));
   }, []);
-    return(
-      <>
-        <Header/>
-        <Greeting />
-        <div id="quiz">
-          <TriviaGame questions={questions} setQuestions={setQuestions}/>
-        </div>
-      </>
-    );
-}
-
-function App() {
-
-  return (
+  console.log(questions);
+  if (questions.length==0){
+    return <h3>Loading...</h3>
+  }else{
+    return (
       <Routes>
-        <Route path="/" element={<Index/>}/>
+        <Route path="/" element={<Index questions={questions}/>}/>
         <Route path="/stats" element={<Stats/>}/>
       </Routes>
-  );
+  )}
 }
 
 export default App;
