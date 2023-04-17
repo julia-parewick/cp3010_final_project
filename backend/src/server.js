@@ -34,6 +34,22 @@ const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     }
 }));
 
+async function checkDBifEmpty(){
+    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    await client.connect();
+    const db = client.db('triviaApp');
+    var collectionCount = await db.collection('triviaquestions').countDocuments()
+    console.log("Collection Count: " + collectionCount)
+    
+        if( collectionCount == 0) {
+            getQuestions()
+        }
+        else {
+            console.log("Found Records : " + collectionCount);
+        }
+}
+checkDBifEmpty();
+
 async function getQuestions(){
     triviaQuestions.deleteMany({});
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
@@ -58,7 +74,6 @@ async function getQuestions(){
         
     })
 }
-getQuestions();
 
 // Questions reset everynight at Midnight (00:00)
 function scheduleFunction() {
@@ -97,7 +112,6 @@ app.get(/^(?!\/api).+/,(req,res)=>{
     res.sendFile(path.join(__dirname,'../build/index.html'));
 })
 
-
 app.get('/api/game', async (req,res)=>{
     //const client = new MongoClient('mongodb://localhost:27017');
     const client = new MongoClient('mongodb://127.0.0.1:27017');
@@ -105,7 +119,7 @@ app.get('/api/game', async (req,res)=>{
     console.log("Connected to DB...getting daily questions.")
     const db = client.db('triviaApp');
     const questions = await db.collection('triviaquestions').find({}).toArray();
-    console.log(questions);
+    //console.log(questions);
     res.json(questions);
 })
 
