@@ -10,30 +10,6 @@ import mongoose from 'mongoose';
 // mongoose.connect("mongodb://127.0.0.1:27017/triviaApp");
 mongoose.connect(process.env.MONGO_CONNECT);
 
-
-// const userData = mongoose.model('userData', new mongoose.Schema({
-//     email:{
-//         type:String,
-//         required:true
-//     },
-//     lastPlayed:{
-//         type:String,
-//         required:true
-//     },
-//     currentStreak:{
-//         type:Number,
-//         required:true
-//     },
-//     recordStreak:{
-//         type:Number,
-//         required:true
-//     },
-//     perfectScores:{
-//         type:Number,
-//         required:true
-//     }
-// }));
-
 const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     category:{
         type:String,
@@ -132,14 +108,17 @@ app.post('/api/adminreset', async(req,res)=>{
     const db = client.db('test');
     const deleteAll = await db.collection('triviaquestions').deleteMany();
     console.log("triviaQuestions Db Cleared!");
+    await client.close()
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
     .then(res => {
         return res.json();
     })
     .then(async loadedQuestions => {
+        await client.connect();
         console.log(loadedQuestions.results);
         const reloadQuestions = await db.collection('triviaquestions').insertMany(loadedQuestions.results); 
         console.log("triviaQuestions DB reloaded!")
+        
     })
     await client.close()
     
