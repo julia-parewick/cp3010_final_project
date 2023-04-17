@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config();
 import express from 'express';
 import path from 'path';
 import {MongoClient} from 'mongodb';
@@ -5,30 +7,32 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import mongoose from 'mongoose';
 
-mongoose.connect("mongodb://127.0.0.1:27017/triviaApp");
+// mongoose.connect("mongodb://127.0.0.1:27017/triviaApp");
+mongoose.connect(process.env.MONGO_CONNECT);
 
-const userData = mongoose.model('userData', new mongoose.Schema({
-    email:{
-        type:String,
-        required:true
-    },
-    lastPlayed:{
-        type:String,
-        required:true
-    },
-    currentStreak:{
-        type:Number,
-        required:true
-    },
-    recordStreak:{
-        type:Number,
-        required:true
-    },
-    perfectScores:{
-        type:Number,
-        required:true
-    }
-}));
+
+// const userData = mongoose.model('userData', new mongoose.Schema({
+//     email:{
+//         type:String,
+//         required:true
+//     },
+//     lastPlayed:{
+//         type:String,
+//         required:true
+//     },
+//     currentStreak:{
+//         type:Number,
+//         required:true
+//     },
+//     recordStreak:{
+//         type:Number,
+//         required:true
+//     },
+//     perfectScores:{
+//         type:Number,
+//         required:true
+//     }
+// }));
 
 const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     category:{
@@ -66,7 +70,7 @@ async function getQuestions(){
     .then(loadedQuestions => {
         const response = loadedQuestions.results;
 
-        triviaQuestions.collection.deleteMany();
+        triviaQuestions.collection.deleteMany({});
 
         triviaQuestions.insertMany(response)
             .then((docs) => {
@@ -121,9 +125,11 @@ app.get(/^(?!\/api).+/,(req,res)=>{
 })
 
 app.post('/api/adminreset', async(req,res)=>{
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    // const client = new MongoClient('mongodb://127.0.0.1:27017');
+    const client = new MongoClient(process.env.MONGO_CONNECT2);
+
     await client.connect();
-    const db = client.db('triviaApp');
+    const db = client.db('test');
     const deleteAll = await db.collection('triviaquestions').deleteMany();
     console.log("triviaQuestions Db Cleared!");
     fetch("https://opentdb.com/api.php?amount=10&type=multiple")
@@ -135,7 +141,7 @@ app.post('/api/adminreset', async(req,res)=>{
         const reloadQuestions = await db.collection('triviaquestions').insertMany(loadedQuestions.results); 
         console.log("triviaQuestions DB reloaded!")
     })
-
+    await client.close()
     
     res.sendStatus(200);
 
@@ -144,40 +150,51 @@ app.post('/api/adminreset', async(req,res)=>{
 
 app.get('/api/game', async (req,res)=>{
     //const client = new MongoClient('mongodb://localhost:27017');
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    // const client = new MongoClient('mongodb://127.0.0.1:27017');
+    const client = new MongoClient(process.env.MONGO_CONNECT2);
+
     await client.connect();
     console.log("Connected to DB...getting daily questions.")
-    const db = client.db('triviaApp');
+    const db = client.db('test');
     const questions = await db.collection('triviaquestions').find({}).toArray();
     console.log(questions);
+    await client.close()
     res.json(questions);
 })
 
 app.get('/api/getuser', async(req,res)=>{
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    // const client = new MongoClient('mongodb://127.0.0.1:27017');
+    const client = new MongoClient(process.env.MONGO_CONNECT2);
+
     await client.connect();
     console.log("Connected to DB...getting users.")
-    const db = client.db('triviaApp');
+    const db = client.db('test');
     const questions = await db.collection('users').find({}).toArray();
     console.log(questions);
+    await client.close()
     res.json(questions);
 })
 
 app.post('/api/adduser',async(req,res)=>{
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    // const client = new MongoClient('mongodb://127.0.0.1:27017');
+    const client = new MongoClient(process.env.MONGO_CONNECT2);
+
     await client.connect();
-    const db = client.db('triviaApp');
+    const db = client.db('test');
     console.log("Adding...");
     const adduser = await db.collection('users').insertOne({"email":req.body.email,"lastPlayed":"","currentStreak":0,"recordStreak":0,"perfectScores":0});
+    await client.close()
     res.redirect("/");
 })
 
 app.post('/api/user', async(req,res)=>{
     console.log(req.body.email);
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
+    // const client = new MongoClient('mongodb://127.0.0.1:27017');
+    const client = new MongoClient(process.env.MONGO_CONNECT2);
+
     await client.connect();
     console.log("Updating user stats...");
-    const db = client.db('triviaApp');
+    const db = client.db('test');
     const user = await db.collection('users').findOneAndReplace({email:req.body.email},
         {
             email:req.body.email,
@@ -188,6 +205,7 @@ app.post('/api/user', async(req,res)=>{
         }
     );
     console.log("User Updated!");
+    await client.close()
     res.sendStatus(200);
 
 })

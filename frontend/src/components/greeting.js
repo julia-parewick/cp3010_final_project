@@ -4,17 +4,17 @@ import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from 'react';
 import { AdminView } from './adminUI';
 
-export function Greeting() {
+export function Greeting(props) {
     const { user, isAuthenticated } = useAuth0();
 
-    const [ userData, setUser ] = useState([]);
+    // const [ userData, setUser ] = useState([]);
 
-    useEffect(() => {
-        fetch('/api/getuser')
-        .then(res => res.json())
-        .then(setUser)
-        .catch(e=>console.log(e.message));
-    }, []);
+    // useEffect(() => {
+    //     fetch('/api/getuser')
+    //     .then(res => res.json())
+    //     .then(setUser)
+    //     .catch(e=>console.log(e.message));
+    // }, []);
 
 
 
@@ -34,10 +34,10 @@ export function Greeting() {
           try{
             let response = await fetch("/api/adduser",requestOptions);
             if(response.status==200){
-                userData.forEach(u=>{
+                props.users.forEach(u=>{
             
                     if(u.email==user.email){
-                        console.log(u);
+                        // console.log(u);
                         localStorage.setItem("id",u._id);
                         localStorage.setItem("email",u.email);
                         localStorage.setItem("streak",u.currentStreak);
@@ -61,7 +61,8 @@ export function Greeting() {
     }
     else{
         localStorage.clear();
-        userData.forEach(u=>{
+        
+        props.users.forEach(u=>{
             
             if(u.email==user.email){
                 console.log(u);
@@ -76,7 +77,7 @@ export function Greeting() {
         if(localStorage.email==null){
             addNewUser(user.email);
         }
-        if(user.email=="admin@cp3010.com"){
+        else if(localStorage.email=="admin@cp3010.com"){
             return(
                 <>
                 <h1>Greetings, Admin.</h1>
@@ -84,17 +85,12 @@ export function Greeting() {
                 <AdminView/>
                 </>
             )
-        }else{
+        }
+        else{
             if(localStorage.getItem("last_played")!=date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear() || localStorage.getItem("last_played")==null){
                 return(
                     <>
                     <h2>Greetings, {user.nickname}.<br/>You have not played today!</h2>
-                    {/* <Button id="displayGame" onClick={()=>{
-                        document.getElementById("game").classList.remove("hidden");
-                        document.getElementById("displayGame").classList.add("hidden");
-                        
-                    }}>
-                        Begin</Button> */}
                     </>
                 )
             }else{
