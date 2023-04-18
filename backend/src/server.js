@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGO_CONNECT);
+mongoose.connect(process.env.MONGO_CONNECT2);
 
 const triviaQuestions = mongoose.model('triviaQuestions', new mongoose.Schema({
     category:{
